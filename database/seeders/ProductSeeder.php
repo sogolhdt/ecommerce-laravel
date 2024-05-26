@@ -2,26 +2,46 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Support\Number;
 
 class ProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
         DB::table('products')->insert([
-            'name' => Str::random(10),
-            'product_code' => Str::random(10),
-            'description' => Str::random(100),
-            'price' => 20.75,
-            'stock' => 2
+            [
+                'name' => 'Product 1',
+                'product_code' => 'P001',
+                'description' => 'Description for Product 1',
+                'price' => 19.99,
+                'stock' => 100,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Product 2',
+                'product_code' => 'P002',
+                'description' => 'Description for Product 2',
+                'price' => 29.99,
+                'stock' => 50,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Product 3',
+                'product_code' => 'P003',
+                'description' => 'Description for Product 3',
+                'price' => 9.99,
+                'stock' => 200,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
