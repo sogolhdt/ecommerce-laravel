@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProductCreated;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::all();
-        return view('products.index', compact('products'));
+        $cartCount = count(session('cart', []));
+        return view('products.index', compact('products', 'cartCount'));
     }
 
     public function create()
@@ -28,7 +31,11 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        Product::create($request->all());
+        $product = Product::create($request->all());
+
+        // Send email to management
+        Mail::to('sogoli.hdt@gmail.com')->send(new ProductCreated($product));
+
         return redirect()->route('products.index');
     }
 }

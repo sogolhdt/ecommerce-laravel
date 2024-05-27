@@ -6,7 +6,9 @@
 </head>
 
 <body>
-    <a href="{{ route('products.create') }}">Create Product</a>
+    <a href="{{ route('products.create') }}">Create New Product</a>
+    <br />
+    <a href="{{ route('cart.index') }}">View Cart - {{ $cartCount }} items</a>
     <h1>Products</h1>
     @if (session('success'))
         <div>{{ session('success') }}</div>
@@ -15,8 +17,7 @@
         <div>{{ session('error') }}</div>
     @endif
     <ul>
-        {{-- <?php $cart = session()->get('cart', []);
-        unset($cart); ?> --}}
+
 
         @foreach ($products as $product)
             <li>
@@ -24,14 +25,21 @@
                 Price: ${{ $product->price }}<br>
                 Description: {{ $product->description }}<br>
                 Stock: {{ $product->stock }}<br>
-                <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                    @csrf
-                    <button type="submit">Add to Cart</button>
-                </form>
+                @if ($product->stock != 0)
+                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                        @csrf
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                @else
+                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" disabled>Add to Cart</button>
+                    </form>
+                @endif
             </li>
         @endforeach
     </ul>
-    <a href="{{ route('cart.index') }}">View Cart</a>
+
 </body>
 
 </html>
