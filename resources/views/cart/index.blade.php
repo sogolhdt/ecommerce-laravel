@@ -30,7 +30,9 @@
                     </form>
                 </li>
             @empty
-                <li>Your cart is empty.</li>
+                <li>
+                    <h3>Your cart is empty.</h3>
+                </li>
             @endforelse
 
         @endforelse

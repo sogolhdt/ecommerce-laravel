@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 
+## Laravel Breeze default routes ##
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -25,9 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+##########################################
+
+
 Route::group(['prefix' => 'products'], function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/create', [ProductController::class, 'create'])->name('products.create');
+    Route::get('/create', [ProductController::class, 'create'])->name('products.create.view');
     Route::post('/', [ProductController::class, 'store'])->name('products.store');
 
 });
@@ -38,4 +42,6 @@ Route::group(['prefix' => 'cart'], function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
+
+
 require __DIR__ . '/auth.php';

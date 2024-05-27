@@ -42,6 +42,15 @@ class ProductSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'Product 4',
+                'product_code' => 'P004',
+                'description' => 'Description for Product 4',
+                'price' => 11.99,
+                'stock' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

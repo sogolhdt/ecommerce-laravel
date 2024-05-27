@@ -13,7 +13,7 @@ class CartController extends Controller
         if (!$product) {
             return $this->redirectWithMessage('products.index', 'error', 'Product not found.');
         }
-
+        // checks if a user is logged in the cart stores in the DB if not it stores in the session
         if (Auth::check()) {
             return $this->addProductToAuthenticatedUserCart($product);
         } else {
@@ -44,7 +44,6 @@ class CartController extends Controller
 
         $cart[$product->id] = [
             "name" => $product->name,
-            "quantity" => 1,
             "price" => $product->price,
             "description" => $product->description
         ];

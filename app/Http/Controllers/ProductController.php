@@ -41,10 +41,10 @@ class ProductController extends Controller
         $product = Product::create($request->all());
 
         // Send email to management
-        $managementEmail = ''; // !! fill the desired email !!
+        $managementEmail = 'sogoli.hdt@gmail.com'; // !! fill the desired email !!
         Mail::to($managementEmail)->send(new ProductCreated($product));
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product created successfully');
     }
 }
 

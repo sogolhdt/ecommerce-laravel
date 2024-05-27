@@ -59,7 +59,6 @@ class LoginRequest extends FormRequest
             foreach ($sessionCart as $id => $item) {
                 $user->cart()->updateOrCreate(
                     ['product_id' => $id],
-                    ['quantity' => $item['quantity']]
                 );
             }
             session()->forget('cart');

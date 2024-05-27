@@ -6,16 +6,20 @@
 </head>
 
 <body>
-    <a href="{{ route('products.create') }}">Create New Product</a>
-    <br />
-    <a href="{{ route('cart.index') }}">View Cart - {{ $cartCount }} items</a>
+    <a href="{{ route('products.create.view') }}">Create New Product</a>
+    <br>
+
+
+
     <h1>Products</h1>
     @if (session('success'))
-        <div>{{ session('success') }}</div>
+        <div style="color: green">{{ session('success') }}</div>
     @endif
     @if (session('error'))
-        <div>{{ session('error') }}</div>
+        <div style="color: red">{{ session('error') }}</div>
     @endif
+    <a href="{{ route('cart.index') }}" style="color: brown; font-weight: bold;">View Cart -
+        {{ $cartCount }} items</a>
     <ul>
 
 
