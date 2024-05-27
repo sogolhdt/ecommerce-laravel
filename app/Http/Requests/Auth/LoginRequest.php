@@ -39,9 +39,10 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
+
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -50,6 +51,19 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Transfer session cart data to the database
+        $sessionCart = session()->get('cart', []);
+        if (!empty($sessionCart)) {
+            $user = Auth::user();
+            foreach ($sessionCart as $id => $item) {
+                $user->cart()->updateOrCreate(
+                    ['product_id' => $id],
+                    ['quantity' => $item['quantity']]
+                );
+            }
+            session()->forget('cart');
+        }
     }
 
     /**
@@ -59,7 +73,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -80,6 +94,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

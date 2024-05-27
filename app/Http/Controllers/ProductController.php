@@ -6,13 +6,19 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ProductCreated;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::all();
-        $cartCount = count(session('cart', []));
+        if (Auth::check()) {
+            $cartCount = Auth::user()->cart()->count();
+        } else {
+
+            $cartCount = count(session('cart', []));
+        }
         return view('products.index', compact('products', 'cartCount'));
     }
 
