@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,41 +11,49 @@ class CartController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Product not found.');
+            return $this->redirectWithMessage('products.index', 'error', 'Product not found.');
         }
 
         if (Auth::check()) {
-            $user = Auth::user();
-            $cartItem = $user->cart()->where('product_id', $product->id)->first();
-
-            if ($cartItem) {
-                return redirect()->route('products.index')->with('error', 'Product is already in the cart.');
-            }
-
-            $user->cart()->create([
-                'product_id' => $product->id,
-            ]);
-
+            return $this->addProductToAuthenticatedUserCart($product);
         } else {
-
-            $cart = session()->get('cart', []);
-
-            if (isset($cart[$id])) {
-                return redirect()->route('products.index')->with('error', 'Product is already in the cart.');
-            }
-
-
-            $cart[$id] = [
-                "name" => $product->name,
-                "quantity" => 1,
-                "price" => $product->price,
-                "description" => $product->description
-            ];
-
-            session()->put('cart', $cart);
+            return $this->addProductToSessionCart($product);
         }
-        return redirect()->route('products.index')->with('success', 'Product added to cart.');
     }
+
+    private function addProductToAuthenticatedUserCart($product)
+    {
+        $user = Auth::user();
+        $cartItem = $user->cart()->where('product_id', $product->id)->first();
+
+        if ($cartItem) {
+            return $this->redirectWithMessage('products.index', 'error', 'Product is already in the cart.');
+        }
+
+        $user->cart()->create(['product_id' => $product->id]);
+        return $this->redirectWithMessage('products.index', 'success', 'Product added to cart.');
+    }
+
+    private function addProductToSessionCart($product)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$product->id])) {
+            return $this->redirectWithMessage('products.index', 'error', 'Product is already in the cart.');
+        }
+
+        $cart[$product->id] = [
+            "name" => $product->name,
+            "quantity" => 1,
+            "price" => $product->price,
+            "description" => $product->description
+        ];
+
+        session()->put('cart', $cart);
+        return $this->redirectWithMessage('products.index', 'success', 'Product added to cart.');
+    }
+
+
 
     public function index()
     {
@@ -68,6 +75,10 @@ class CartController extends Controller
                 session()->put('cart', $cart);
             }
         }
-        return redirect()->route('cart.index')->with('success', 'Product removed from cart.');
+        return $this->redirectWithMessage('cart.index', 'success', 'Product removed from cart.');
+    }
+    private function redirectWithMessage($route, $type, $message)
+    {
+        return redirect()->route($route)->with($type, $message);
     }
 }

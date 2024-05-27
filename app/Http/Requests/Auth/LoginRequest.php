@@ -51,7 +51,7 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
-
+        ##################################################
         // Transfer session cart data to the database
         $sessionCart = session()->get('cart', []);
         if (!empty($sessionCart)) {
@@ -64,6 +64,7 @@ class LoginRequest extends FormRequest
             }
             session()->forget('cart');
         }
+        #####################################################
     }
 
     /**

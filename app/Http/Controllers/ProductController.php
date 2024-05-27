@@ -13,12 +13,13 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
+
         if (Auth::check()) {
             $cartCount = Auth::user()->cart()->count();
         } else {
-
             $cartCount = count(session('cart', []));
         }
+
         return view('products.index', compact('products', 'cartCount'));
     }
 
@@ -40,7 +41,8 @@ class ProductController extends Controller
         $product = Product::create($request->all());
 
         // Send email to management
-        Mail::to('sogoli.hdt@gmail.com')->send(new ProductCreated($product));
+        $managementEmail = ''; // !! fill the desired email !!
+        Mail::to($managementEmail)->send(new ProductCreated($product));
 
         return redirect()->route('products.index');
     }
